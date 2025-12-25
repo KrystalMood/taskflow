@@ -14,26 +14,26 @@ export default function AboutPage() {
         </h1>
         <div className="prose prose-lg max-w-3xl">
           <p className="text-brand-600 text-lg">
-            TaskFlow adalah platform task management modern yang dirancang untuk
-            membantu tim bekerja lebih produktif dan efisien.
+            TaskFlow is a modern task management platform designed to help teams
+            work more productively and efficiently.
           </p>
 
           <h2 className="text-brand-900 mt-8 mb-4 text-2xl font-bold">
             Our Mission
           </h2>
           <p className="text-brand-600">
-            Menyederhanakan cara tim mengelola proyek dan tugas, sehingga mereka
-            bisa fokus pada yang paling penting.
+            Simplify how teams manage projects and tasks, so they can focus on
+            what matters most.
           </p>
 
           <h2 className="text-brand-900 mt-8 mb-4 text-2xl font-bold">
             Features
           </h2>
           <ul className="text-brand-600 list-inside list-disc space-y-2">
-            <li>Task management dengan prioritas dan status</li>
-            <li>Project organization yang fleksibel</li>
-            <li>Collaboration tools untuk tim</li>
-            <li>Real-time updates dan notifications</li>
+            <li>Task management with priorities and statuses</li>
+            <li>Flexible project organization</li>
+            <li>Team collaboration tools</li>
+            <li>Real-time updates and notifications</li>
           </ul>
         </div>
       </div>

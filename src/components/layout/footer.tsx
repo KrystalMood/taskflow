@@ -11,7 +11,7 @@ export function Footer() {
               Task<span className="text-accent-600">Flow</span>
             </Link>
             <p className="text-brand-500 mt-2 text-sm">
-              Task management untuk tim modern.
+              Task management for modern teams.
             </p>
           </div>
 

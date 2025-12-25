@@ -27,7 +27,7 @@ export function Navbar() {
             Pricing
           </NavLink>
           <NavLink
-            href="/login"
+            href="/dashboard"
             className="text-brand-600 hover:text-brand-900"
             activeClassName="text-accent-600 font-medium"
           >
