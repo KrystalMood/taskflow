@@ -7,3 +7,4 @@ export {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+export { NavLink } from "./nav-link";

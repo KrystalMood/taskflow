@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui";
+import { Button, NavLink } from "@/components/ui";
 
 export function Navbar() {
   return (
@@ -12,24 +12,27 @@ export function Navbar() {
 
         {/* Navigation */}
         <nav className="hidden items-center gap-6 md:flex">
-          <Link
+          <NavLink
             href="/about"
-            className="text-brand-600 hover:text-brand-900 transition-colors"
+            className="text-brand-600 hover:text-brand-900"
+            activeClassName="text-accent-600 font-medium"
           >
             About
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             href="/pricing"
-            className="text-brand-600 hover:text-brand-900 transition-colors"
+            className="text-brand-600 hover:text-brand-900"
+            activeClassName="text-accent-600 font-medium"
           >
             Pricing
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             href="/login"
-            className="text-brand-600 hover:text-brand-900 transition-colors"
+            className="text-brand-600 hover:text-brand-900"
+            activeClassName="text-accent-600 font-medium"
           >
             Dashboard
-          </Link>
+          </NavLink>
         </nav>
 
         {/* Actions */}
