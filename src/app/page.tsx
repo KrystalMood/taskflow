@@ -1,57 +1,114 @@
+import { Button } from "@/components/ui";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui";
+
 import { Task, TaskStatus, TaskPriority } from "@/types";
 
-const mockTask: Task = {
-  id: "1",
-  title: "Learn TypeScript",
-  description: "Complete Module 03 of Next.js Mastery PBL",
-  status: "in-progress",
-  priority: "high",
-  projectId: "project-1",
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
+const mockTasks: Task[] = [
+  {
+    id: "1",
+    title: "Learn TypeScript",
+    description: "Complete Module 03 of Next.js Mastery PBL",
+    status: "completed",
+    priority: "high",
+    projectId: "project-1",
+  },
+  {
+    id: "2",
+    title: "Master Tailwind CSS",
+    description: "Complete Module 04 styling exercises",
+    status: "in-progress",
+    priority: "high",
+    projectId: "project-1",
+  },
+  {
+    id: "3",
+    title: "Build TaskFlow MVP",
+    description: "Create the initial version of TaskFlow",
+    status: "todo",
+    priority: "medium",
+    projectId: "project-1",
+  },
+];
 
-function getStatusColor(status: TaskStatus): string {
-  const colors: Record<TaskStatus, string> = {
-    todo: "text-gray-600",
-    "in-progress": "text-blue-600",
-    completed: "text-green-600",
+function getStatusStyles(status: TaskStatus) {
+  const styles: Record<TaskStatus, string> = {
+    todo: "bg-brand-100 text-brand-800",
+    "in-progress": "bg-accent-100 text-accent-800",
+    completed: "bg-success-50 text-success-600",
   };
 
-  return colors[status];
+  return styles[status];
 }
 
-function getPriorityBadge(priority: TaskPriority): string {
-  const badges: Record<TaskPriority, string> = {
-    low: "bg-gray-100 text-gray-800",
-    medium: "bg-yellow-100 text-yellow-800",
-    high: "bg-red-100 text-red-800",
+function getPriorityStyles(priority: TaskPriority) {
+  const styles: Record<TaskPriority, string> = {
+    low: "bg-brand-100 text-brand-600",
+    medium: "bg-warning-50 text-warning-600",
+    high: "bg-danger-50 text-danger-600",
   };
-
-  return badges[priority];
+  return styles[priority];
 }
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold">TaskFlow</h1>
-      <p className="mt-4 text-gray-600">Task Management SaaS - Coming Soon</p>
-
-      {/* Demo */}
-      <div className="mt-8 max-w-md rounded-lg border p-4">
-        <h2 className="font-semibold">{mockTask.title}</h2>
-        <p className="text-sm text-gray-500">{mockTask.description}</p>
-        <div className="mt-2 flex gap-2">
-          <span className={`text-sm ${getStatusColor(mockTask.status)}`}>
-            {mockTask.status}
-          </span>
-          <span
-            className={`rounded px-2 py-1 text-xs ${getPriorityBadge(mockTask.priority)}`}
-          >
-            {mockTask.priority}
-          </span>
+    <main className="bg-brand-50 min-h-screen">
+      {/* Hero Section */}
+      <section className="border-brand-200 border-b bg-white">
+        <div className="container mx-auto px-4 py-16 text-center">
+          <h1 className="text-brand-900 text-4xl font-bold md:text-5xl">
+            Task<span className="text-accent-600">Flow</span>
+          </h1>
+          <p className="text-brand-600 mx-auto mt-4 max-w-2xl text-lg">
+            Task Management SaaS untuk tim modern. Kelola proyek dan tugas
+            dengan efisien.
+          </p>
+          <div className="mt-8 flex justify-center gap-4">
+            <Button size="lg">Get Started</Button>
+            <Button size="lg" variant="secondary">
+              Learn More
+            </Button>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* Task Preview */}
+      <section className="container mx-auto px-4 py-16">
+        <h2 className="text-brand-900 mb-8 text-2xl font-bold">Task Preview</h2>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {mockTasks.map((task) => (
+            <Card key={task.id}>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>{task.title}</CardTitle>
+                  <span
+                    className={`rounded-full px-2 py-1 text-xs ${getPriorityStyles(
+                      task.priority
+                    )}`}
+                  >
+                    {task.priority}
+                  </span>
+                </div>
+                <CardDescription>{task.description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <span
+                  className={`rounded-full px-2 py-1 text-xs ${getStatusStyles(
+                    task.status
+                  )}`}
+                >
+                  {task.status}
+                </span>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
