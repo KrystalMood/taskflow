@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar, Footer } from "@/components/layout";
+import { SessionProvider } from "@/components/providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,9 +29,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col antialiased`}
       >
-        <Navbar />
-        {children}
-        <Footer />
+        <SessionProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </SessionProvider>
       </body>
     </html>
   );

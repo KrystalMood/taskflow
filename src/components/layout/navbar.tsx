@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Button, NavLink } from "@/components/ui";
+import { NavLink } from "@/components/ui";
+import { UserNav } from "@/components/auth";
 
 export function Navbar() {
   return (
@@ -36,12 +37,7 @@ export function Navbar() {
         </nav>
 
         {/* Actions */}
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm">
-            Sign In
-          </Button>
-          <Button size="sm">Get Started</Button>
-        </div>
+        <UserNav />
       </div>
     </header>
   );
