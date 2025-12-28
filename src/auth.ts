@@ -1,7 +1,14 @@
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { prisma } from "@/lib/prisma";
+import bcrypt from "bcryptjs";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: "jwt",
+  },
   providers: [
     Credentials({
       name: "credentials",
@@ -16,17 +23,32 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         },
       },
       async authorize(credentials) {
-        if (
-          credentials?.email === "demo@taskflow.com" &&
-          credentials?.password === "demo123"
-        ) {
-          return {
-            id: "1",
-            name: "Demo User",
-            email: "demo@taskflow.com",
-          };
+        if (!credentials?.email || !credentials?.password) {
+          return null;
         }
-        return null;
+
+        const user = await prisma.user.findFirst({
+          where: { email: credentials.email as string },
+        });
+
+        if (!user || !user.password) {
+          return null;
+        }
+
+        const isValidPassword = await bcrypt.compare(
+          credentials.password as string,
+          user.password
+        );
+
+        if (!isValidPassword) {
+          return null;
+        }
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        };
       },
     }),
   ],
@@ -34,9 +56,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: "/login",
   },
   callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
     async session({ session, token }) {
-      if (token.sub) {
-        session.user.id = token.sub;
+      if (token.id) {
+        session.user.id = token.id as string;
       }
       return session;
     },
