@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { PrismaClient } from "@/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
@@ -18,6 +19,7 @@ async function main() {
   await prisma.project.deleteMany();
   await prisma.session.deleteMany();
   await prisma.account.deleteMany();
+  await prisma.verificationToken.deleteMany();
   await prisma.user.deleteMany();
 
   console.log("Cleaned existing data!");
