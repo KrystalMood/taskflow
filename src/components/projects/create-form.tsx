@@ -26,7 +26,7 @@ export function CreateProjectForm() {
       </CardHeader>
       <CardContent>
         <form action={formAction} className="space-y-4">
-          {state?.success === false && (
+          {state?.success === false && !state.fieldErrors && (
             <div className="bg-danger-50 text-danger-600 rounded-md p-3 text-sm">
               {state.message}
             </div>
@@ -43,6 +43,11 @@ export function CreateProjectForm() {
             label="Project Name *"
             placeholder="My Awesome Project"
             required
+            error={
+              state?.success === false
+                ? state.fieldErrors?.name?.[0]
+                : undefined
+            }
           />
 
           <Textarea
@@ -50,6 +55,11 @@ export function CreateProjectForm() {
             label="Description"
             placeholder="What is this project about?"
             rows={3}
+            error={
+              state?.success === false
+                ? state.fieldErrors?.description?.[0]
+                : undefined
+            }
           />
 
           <ColorPicker name="color" label="Color" defaultValue="#6366f1" />

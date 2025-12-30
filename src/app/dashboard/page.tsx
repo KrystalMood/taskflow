@@ -3,6 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { getDashboardStats } from "@/lib/stats";
+import { PageHeader } from "@/components/layout";
 
 export const metadata: Metadata = {
   title: "Dashboard - TaskFlow",
@@ -19,9 +20,10 @@ export default async function DashboardPage() {
   const stats = await getDashboardStats(session.user.id);
   return (
     <div>
-      <h1 className="text-brand-900 mb-6 text-2xl font-bold">
-        Dashboard Overview
-      </h1>
+      <PageHeader
+        title="Dashboard Overview"
+        description="Welcome back! Here's what's happening."
+      />
 
       {/* Stats Grid */}
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

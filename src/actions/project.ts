@@ -3,10 +3,11 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib";
 import { revalidatePath } from "next/cache";
+import { createProjectSchema } from "@/lib/validations/project";
 
 export type ActionResult =
   | { success: true; message?: string }
-  | { success: false; message: string };
+  | { success: false; message: string; fieldErrors?: Record<string, string[]> };
 
 export async function createProject(
   prevState: ActionResult | null,
@@ -17,29 +18,29 @@ export async function createProject(
     return { success: false, message: "You must be logged in" };
   }
 
-  const name = formData.get("name") as string;
-  const description = formData.get("description") as string;
-  const color = (formData.get("color") as string) || "#6366f1";
+  const rawData = {
+    name: formData.get("name") as string,
+    description: formData.get("description") as string,
+    color: (formData.get("color") as string) || "#6366f1",
+  };
 
-  if (!name || name.trim().length < 2) {
+  const result = createProjectSchema.safeParse(rawData);
+
+  if (!result.success) {
     return {
       success: false,
-      message: "Name must be at least 2 characters long",
+      message: "Validation failed",
+      fieldErrors: result.error.flatten().fieldErrors,
     };
   }
 
-  if (name.length > 100) {
-    return {
-      success: false,
-      message: "Name must be at most 100 characters long",
-    };
-  }
+  const { name, description, color } = result.data;
 
   try {
     await prisma.project.create({
       data: {
-        name: name.trim(),
-        description: description?.trim() || null,
+        name,
+        description: description || null,
         color,
         userId: session.user.id,
       },

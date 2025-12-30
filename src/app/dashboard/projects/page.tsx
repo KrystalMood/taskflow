@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui";
 import { ProjectCard, CreateProjectForm } from "@/components/projects";
+import { PageHeader } from "@/components/layout";
 
 export const metadata: Metadata = {
   title: "Projects - TaskFlow",
@@ -32,10 +33,9 @@ export default async function ProjectsPage() {
   return (
     <div className="space-y-8">
       <CreateProjectForm />
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-brand-900 text-2xl font-bold">Projects</h1>
+      <PageHeader title="Projects" description="Your TaskFlow projects">
         <Button>New Project</Button>
-      </div>
+      </PageHeader>
 
       {projects.length === 0 ? (
         <div className="text-brand-500 py-16 text-center">
