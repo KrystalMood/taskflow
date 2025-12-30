@@ -9,3 +9,6 @@ export {
 } from "@/components/ui/card";
 export { NavLink } from "./nav-link";
 export { Section, SectionHeader } from "./section";
+export { SubmitButton } from "./submit-button";
+export { Input } from "./input";
+export { Textarea } from "./textarea";

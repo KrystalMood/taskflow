@@ -3,7 +3,7 @@ import { prisma } from "@/lib";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui";
-import { ProjectCard } from "@/components/projects";
+import { ProjectCard, CreateProjectForm } from "@/components/projects";
 
 export const metadata: Metadata = {
   title: "Projects - TaskFlow",
@@ -30,7 +30,8 @@ export default async function ProjectsPage() {
   });
 
   return (
-    <div>
+    <div className="space-y-8">
+      <CreateProjectForm />
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-brand-900 text-2xl font-bold">Projects</h1>
         <Button>New Project</Button>

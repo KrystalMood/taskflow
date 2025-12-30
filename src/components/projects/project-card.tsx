@@ -1,8 +1,15 @@
 "use client";
 
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui";
-import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  Button,
+} from "@/components/ui";
+import { startTransition, useState, useTransition } from "react";
+import { ChevronDown, ChevronUp, Trash2 } from "lucide-react";
+import { deleteProject } from "@/actions/project";
 
 interface ProjectCardProps {
   project: {
@@ -19,6 +26,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const statusConfig = {
     ACTIVE: { label: "Active", className: "bg-success-50 text-success-600" },
@@ -33,12 +41,23 @@ export function ProjectCard({ project }: ProjectCardProps) {
     statusConfig[project.status as keyof typeof statusConfig] ||
     statusConfig.ACTIVE;
 
+  const handleDelete = () => {
+    if (!confirm("Are you sure you want to delete this project?")) return;
+
+    startTransition(async () => {
+      const result = await deleteProject(project.id);
+      if (!result.success) {
+        alert(result.message);
+      }
+    });
+  };
+
   return (
     <Card
       className="cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
       onClick={() => setIsExpanded(!isExpanded)}
     >
-      <CardHeader>
+      <CardHeader className="flex-row items-center justify-between space-y-0">
         <div className="flex items-center gap-2">
           <span
             className="h-3 w-3 shrink-0 rounded-full"
@@ -46,6 +65,18 @@ export function ProjectCard({ project }: ProjectCardProps) {
           />
           <CardTitle className="truncate">{project.name}</CardTitle>
         </div>
+        <Button
+          variant="ghost"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDelete();
+          }}
+          disabled={isPending}
+          title="Delete Project"
+          className="h-8 w-8 p-0 hover:bg-red-50"
+        >
+          <Trash2 className="h-4 w-4 text-gray-400 hover:text-red-500" />
+        </Button>
       </CardHeader>
       <CardContent>
         {isExpanded && project.description && (
