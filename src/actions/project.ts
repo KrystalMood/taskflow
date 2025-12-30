@@ -3,7 +3,10 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib";
 import { revalidatePath } from "next/cache";
-import { createProjectSchema } from "@/lib/validations/project";
+import {
+  createProjectSchema,
+  updateProjectSchema,
+} from "@/lib/validations/project";
 
 export type ActionResult =
   | { success: true; message?: string }
@@ -51,6 +54,65 @@ export async function createProject(
   } catch (error) {
     console.error("Failed to create project:", error);
     return { success: false, message: "Failed to create project" };
+  }
+}
+
+export async function updateProject(
+  id: string,
+  prevState: ActionResult | null,
+  formData: FormData
+): Promise<ActionResult> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { success: false, message: "You must be logged in" };
+  }
+
+  const existing = await prisma.project.findUnique({
+    where: { id },
+    select: { userId: true },
+  });
+
+  if (!existing) {
+    return { success: false, message: "Project not found" };
+  }
+
+  if (existing.userId !== session.user.id) {
+    return { success: false, message: "You don't own this project" };
+  }
+
+  const rawData = {
+    name: formData.get("name") as string,
+    description: formData.get("description") as string,
+    color: (formData.get("color") as string) || "#6366f1",
+    status: formData.get("status") as string | undefined,
+  };
+
+  const cleanData = Object.fromEntries(
+    Object.entries(rawData).filter(([_, v]) => v !== undefined && v !== "")
+  );
+
+  const result = updateProjectSchema.safeParse(cleanData);
+
+  if (!result.success) {
+    return {
+      success: false,
+      message: "Validation failed",
+      fieldErrors: result.error.flatten().fieldErrors,
+    };
+  }
+
+  try {
+    await prisma.project.update({
+      where: { id },
+      data: result.data,
+    });
+
+    revalidatePath("/dashboard/projects");
+    revalidatePath(`/dashboard/projects/${id}`);
+    return { success: true, message: "Project updated successfully" };
+  } catch (error) {
+    console.error("Failed to update project:", error);
+    return { success: false, message: "Failed to update project" };
   }
 }
 

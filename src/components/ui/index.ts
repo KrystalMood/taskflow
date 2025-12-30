@@ -12,3 +12,5 @@ export { Section, SectionHeader } from "./section";
 export { SubmitButton } from "./submit-button";
 export { Input } from "./input";
 export { Textarea } from "./textarea";
+export { ColorPicker } from "./color-picker";
+export { Select } from "./select";

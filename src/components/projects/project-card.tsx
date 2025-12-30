@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   Card,
   CardHeader,
@@ -8,7 +9,7 @@ import {
   Button,
 } from "@/components/ui";
 import { startTransition, useState, useTransition } from "react";
-import { ChevronDown, ChevronUp, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, ExternalLink, Trash2 } from "lucide-react";
 import { deleteProject } from "@/actions/project";
 
 interface ProjectCardProps {
@@ -65,18 +66,32 @@ export function ProjectCard({ project }: ProjectCardProps) {
           />
           <CardTitle className="truncate">{project.name}</CardTitle>
         </div>
-        <Button
-          variant="ghost"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleDelete();
-          }}
-          disabled={isPending}
-          title="Delete Project"
-          className="h-8 w-8 p-0 hover:bg-red-50"
+        <div
+          className="flex items-center gap-1"
+          onClick={(e) => e.stopPropagation()}
         >
-          <Trash2 className="h-4 w-4 text-gray-400 hover:text-red-500" />
-        </Button>
+          <Link href={`/dashboard/projects/${project.id}`}>
+            <Button
+              variant="ghost"
+              title="View Project"
+              className="h-8 w-8 p-0"
+            >
+              <ExternalLink className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+            </Button>
+          </Link>
+          <Button
+            variant="ghost"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete();
+            }}
+            disabled={isPending}
+            title="Delete Project"
+            className="h-8 w-8 p-0 hover:bg-red-50"
+          >
+            <Trash2 className="h-4 w-4 text-gray-400 hover:text-red-500" />
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         {isExpanded && project.description && (
