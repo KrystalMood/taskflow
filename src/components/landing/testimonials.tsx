@@ -28,12 +28,12 @@ export function TestimonialsSection() {
       />
       <div className="grid gap-8 md:grid-cols-3">
         {testimonials.map((item) => (
-          <Card key={item.author} className="p-6">
-            <CardContent className="pt-0">
+          <Card key={item.author} className="flex h-full flex-col p-6">
+            <CardContent className="flex flex-1 flex-col space-y-4 pt-0">
               <p className="text-brand-600 text-lg italic">
                 &quot;{item.quote}&quot;
               </p>
-              <div className="mt-6 flex items-center gap-3">
+              <div className="mt-auto flex items-center gap-3">
                 <div className="bg-accent-100 flex h-12 w-12 items-center justify-center rounded-full">
                   <span className="text-accent-600 font-bold">
                     {item.author.charAt(0)}

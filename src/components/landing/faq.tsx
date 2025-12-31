@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Section, SectionHeader } from "@/components/ui";
 import { cn } from "@/lib/utils";
+import { ChevronDownIcon } from "lucide-react";
 
 const faqs = [
   {
@@ -58,7 +59,7 @@ export function FAQSection() {
                   openIndex === index && "rotate-180"
                 )}
               >
-                ▼
+                <ChevronDownIcon />
               </span>
             </button>
             <div

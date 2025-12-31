@@ -14,3 +14,4 @@ export { Input } from "./input";
 export { Textarea } from "./textarea";
 export { ColorPicker } from "./color-picker";
 export { Select } from "./select";
+export { Badge } from "./badge";

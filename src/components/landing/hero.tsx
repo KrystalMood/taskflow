@@ -2,7 +2,7 @@ import { Button } from "@/components/ui";
 
 export function HeroSection() {
   return (
-    <section className="from-brand-50 bg-linear-to-br to-white py-20 md:py-32">
+    <section className="from-brand-50 flex min-h-screen items-center bg-linear-to-br to-white py-20 md:py-32">
       <div className="container mx-auto px-4 text-center">
         <h1 className="text-brand-900 text-4xl font-bold md:text-6xl">
           Task Management for

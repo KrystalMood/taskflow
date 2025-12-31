@@ -20,7 +20,10 @@ export function Sidebar() {
         <h2 className="text-brand-900 mb-4 font-semibold">Dashboard</h2>
         <ul className="space-y-1">
           {navItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive =
+              item.href === "/dashboard"
+                ? pathname === "/dashboard"
+                : pathname.startsWith(item.href);
             return (
               <li key={item.href}>
                 <Link

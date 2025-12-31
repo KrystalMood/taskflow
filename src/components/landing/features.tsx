@@ -1,33 +1,41 @@
 import { Section, SectionHeader, Card, CardContent } from "@/components/ui";
+import {
+  BarChart3,
+  Bell,
+  CheckSquare,
+  ShieldCheck,
+  Smartphone,
+  Users,
+} from "lucide-react";
 
 const features = [
   {
-    icon: "📋",
+    icon: <CheckSquare className="text-brand-600 mx-auto h-12 w-12" />,
     title: "Task Management",
     description: "Create, assign, and track tasks with an intuitive interface",
   },
   {
-    icon: "👥",
+    icon: <Users className="text-brand-600 mx-auto h-12 w-12" />,
     title: "Team Collaboration",
     description: "Work together in real-time with comments and mentions",
   },
   {
-    icon: "📊",
+    icon: <BarChart3 className="text-brand-600 mx-auto h-12 w-12" />,
     title: "Analytics Dashboard",
     description: "Track progress with detailed reports and insights",
   },
   {
-    icon: "🔔",
+    icon: <Bell className="text-brand-600 mx-auto h-12 w-12" />,
     title: "Smart Notifications",
     description: "Stay updated with customizable alerts and reminders",
   },
   {
-    icon: "📱",
+    icon: <Smartphone className="text-brand-600 mx-auto h-12 w-12" />,
     title: "Mobile Ready",
     description: "Access your tasks anywhere with our mobile-friendly design",
   },
   {
-    icon: "🔒",
+    icon: <ShieldCheck className="text-brand-600 mx-auto h-12 w-12" />,
     title: "Enterprise Security",
     description: "Keep your data safe with enterprise-grade security",
   },
@@ -47,7 +55,7 @@ export function FeaturesSection() {
             className="p-8 text-center transition-transform hover:-translate-y-1 hover:shadow-lg"
           >
             <CardContent className="pt-6">
-              <span className="text-4xl">{feature.icon}</span>
+              <div className="mb-4 flex justify-center">{feature.icon}</div>
               <h3 className="text-brand-900 mt-4 text-xl font-semibold">
                 {feature.title}
               </h3>

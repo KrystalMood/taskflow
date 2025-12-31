@@ -8,6 +8,7 @@ import {
   Button,
 } from "@/components/ui";
 import { cn } from "@/lib/utils";
+import { CheckIcon } from "lucide-react";
 
 const plans = [
   {
@@ -94,7 +95,9 @@ export function PricingSection() {
                     key={feature}
                     className="text-brand-600 flex items-center gap-2"
                   >
-                    <span className="text-success-500">✓</span>
+                    <span className="text-success-500">
+                      <CheckIcon />
+                    </span>
                     {feature}
                   </li>
                 ))}
