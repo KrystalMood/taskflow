@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckSquare, Folder, Home } from "lucide-react";
+import { CheckSquare, Folder, Home, Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -9,6 +9,7 @@ const navItems = [
   { href: "/dashboard", label: "Overview", icon: Home },
   { href: "/dashboard/projects", label: "Projects", icon: Folder },
   { href: "/dashboard/tasks", label: "Tasks", icon: CheckSquare },
+  { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
 export function Sidebar() {
