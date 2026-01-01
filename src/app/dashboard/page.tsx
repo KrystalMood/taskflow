@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui";
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 import { getDashboardStats } from "@/lib/stats";
 import { PageHeader } from "@/components/layout";
+import { requireAuth } from "@/lib";
 
 export const metadata: Metadata = {
   title: "Dashboard - TaskFlow",
@@ -11,11 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardPage() {
-  const session = await auth();
-
-  if (!session?.user?.id) {
-    redirect("/login");
-  }
+  const session = await requireAuth();
 
   const stats = await getDashboardStats(session.user.id);
   return (

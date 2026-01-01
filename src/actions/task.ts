@@ -1,7 +1,6 @@
 "use server";
 
-import { auth } from "@/auth";
-import { prisma } from "@/lib";
+import { checkOwnership, getAuthContext, prisma } from "@/lib";
 import { createTaskSchema, updateTaskSchema } from "@/lib/validations";
 import { revalidatePath } from "next/cache";
 
@@ -13,9 +12,9 @@ export async function createTask(
   prevState: ActionResult | null,
   formData: FormData
 ): Promise<ActionResult> {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return { success: false, message: "You must be logged in" };
+  const authResult = await getAuthContext();
+  if (!authResult.success) {
+    return { success: false, message: authResult.message };
   }
 
   const rawData = {
@@ -41,7 +40,7 @@ export async function createTask(
   const project = await prisma.project.findFirst({
     where: {
       id: projectId,
-      userId: session.user.id,
+      userId: authResult.userId,
     },
   });
 
@@ -58,7 +57,7 @@ export async function createTask(
         title,
         description: description || null,
         projectId,
-        userId: session.user.id,
+        userId: authResult.userId,
         priority: priority as "LOW" | "MEDIUM" | "HIGH" | "URGENT",
         dueDate: dueDate || null,
       },
@@ -79,22 +78,22 @@ export async function updateTask(
   prevState: ActionResult | null,
   formData: FormData
 ): Promise<ActionResult> {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return { success: false, message: "You must be logged in" };
+  const authResult = await getAuthContext();
+  if (!authResult.success) {
+    return { success: false, message: authResult.message };
   }
 
   const existing = await prisma.task.findFirst({
     where: {
       id,
-      userId: session.user.id,
+      userId: authResult.userId,
     },
   });
 
-  if (!existing) {
+  if (!existing || !checkOwnership(existing, authResult.userId)) {
     return {
       success: false,
-      message: "Task not found or access denied.",
+      message: "You don't own this task",
     };
   }
 
@@ -107,7 +106,7 @@ export async function updateTask(
   };
 
   const cleanData = Object.fromEntries(
-    Object.entries(rawData).filter(([_, v]) => v !== undefined && v !== "")
+    Object.entries(rawData).filter(([, v]) => v !== undefined && v !== "")
   );
 
   const result = updateTaskSchema.safeParse(cleanData);
@@ -138,17 +137,17 @@ export async function updateTask(
 }
 
 export async function deleteTask(id: string): Promise<ActionResult> {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return { success: false, message: "You must be logged in" };
+  const authResult = await getAuthContext();
+  if (!authResult.success) {
+    return { success: false, message: authResult.message };
   }
 
   const task = await prisma.task.findFirst({
-    where: { id, userId: session.user.id },
+    where: { id, userId: authResult.userId },
   });
 
-  if (!task) {
-    return { success: false, message: "Task not found" };
+  if (!task || !checkOwnership(task, authResult.userId)) {
+    return { success: false, message: "You don't own this task" };
   }
 
   try {

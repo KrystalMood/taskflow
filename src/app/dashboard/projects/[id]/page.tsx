@@ -2,9 +2,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui";
 import { ArrowLeft } from "lucide-react";
 import { PageHeader } from "@/components/layout";
-import { auth } from "@/auth";
 import { notFound, redirect } from "next/navigation";
-import { prisma } from "@/lib";
+import { prisma, requireAuth } from "@/lib";
 import { EditProjectForm } from "@/components/projects";
 
 export default async function ProjectDetailPage({
@@ -12,10 +11,7 @@ export default async function ProjectDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    redirect("/login");
-  }
+  const session = await requireAuth();
 
   const { id } = await params;
 

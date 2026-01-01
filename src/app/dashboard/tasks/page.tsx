@@ -1,9 +1,8 @@
-import { auth } from "@/auth";
 import { PageHeader } from "@/components/layout";
 import { CreateTaskForm, TaskCard } from "@/components/tasks";
 import { prisma } from "@/lib";
 import { Metadata } from "next";
-import { redirect } from "next/navigation";
+import { requireAuth } from "@/lib/auth-helpers";
 
 export const metadata: Metadata = {
   title: "Tasks - TaskFlow",
@@ -11,11 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function TasksPage() {
-  const session = await auth();
-
-  if (!session?.user?.id) {
-    redirect("/login");
-  }
+  const session = await requireAuth();
 
   const [tasks, projects] = await Promise.all([
     prisma.task.findMany({

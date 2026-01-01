@@ -1,7 +1,6 @@
 "use server";
 
-import { auth } from "@/auth";
-import { prisma } from "@/lib";
+import { checkOwnership, getAuthContext, prisma } from "@/lib";
 import { revalidatePath } from "next/cache";
 import {
   createProjectSchema,
@@ -16,9 +15,9 @@ export async function createProject(
   prevState: ActionResult | null,
   formData: FormData
 ): Promise<ActionResult> {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return { success: false, message: "You must be logged in" };
+  const authResult = await getAuthContext();
+  if (!authResult.success) {
+    return { success: false, message: authResult.message };
   }
 
   const rawData = {
@@ -45,7 +44,7 @@ export async function createProject(
         name,
         description: description || null,
         color,
-        userId: session.user.id,
+        userId: authResult.userId,
       },
     });
 
@@ -62,9 +61,9 @@ export async function updateProject(
   prevState: ActionResult | null,
   formData: FormData
 ): Promise<ActionResult> {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return { success: false, message: "You must be logged in" };
+  const authResult = await getAuthContext();
+  if (!authResult.success) {
+    return { success: false, message: authResult.message };
   }
 
   const existing = await prisma.project.findUnique({
@@ -72,12 +71,8 @@ export async function updateProject(
     select: { userId: true },
   });
 
-  if (!existing) {
-    return { success: false, message: "Project not found" };
-  }
-
-  if (existing.userId !== session.user.id) {
-    return { success: false, message: "You don't own this project" };
+  if (!checkOwnership(existing, authResult.userId)) {
+    return { success: false, message: "Project not found or access denied." };
   }
 
   const rawData = {
@@ -88,7 +83,7 @@ export async function updateProject(
   };
 
   const cleanData = Object.fromEntries(
-    Object.entries(rawData).filter(([_, v]) => v !== undefined && v !== "")
+    Object.entries(rawData).filter(([, v]) => v !== undefined && v !== "")
   );
 
   const result = updateProjectSchema.safeParse(cleanData);
@@ -117,9 +112,9 @@ export async function updateProject(
 }
 
 export async function deleteProject(id: string): Promise<ActionResult> {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return { success: false, message: "You must be logged in" };
+  const authResult = await getAuthContext();
+  if (!authResult.success) {
+    return { success: false, message: authResult.message };
   }
 
   const project = await prisma.project.findUnique({
@@ -127,11 +122,7 @@ export async function deleteProject(id: string): Promise<ActionResult> {
     select: { userId: true },
   });
 
-  if (!project) {
-    return { success: false, message: "Project not found" };
-  }
-
-  if (project.userId !== session.user.id) {
+  if (!checkOwnership(project, authResult.userId)) {
     return { success: false, message: "You don't own this project" };
   }
 

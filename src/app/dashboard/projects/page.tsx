@@ -1,7 +1,5 @@
-import { auth } from "@/auth";
-import { prisma } from "@/lib";
+import { prisma, requireAuth } from "@/lib";
 import { Metadata } from "next";
-import { redirect } from "next/navigation";
 import { Button } from "@/components/ui";
 import { ProjectCard, CreateProjectForm } from "@/components/projects";
 import { PageHeader } from "@/components/layout";
@@ -12,11 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ProjectsPage() {
-  const session = await auth();
-
-  if (!session?.user?.id) {
-    redirect("/login");
-  }
+  const session = await requireAuth();
 
   const projects = await prisma.project.findMany({
     where: { userId: session.user.id },

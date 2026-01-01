@@ -1,5 +1,4 @@
-import { auth } from "@/auth";
-import { prisma } from "@/lib";
+import { prisma, requireAuth } from "@/lib";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
@@ -18,10 +17,7 @@ export default async function TaskDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    redirect("/login");
-  }
+  const session = await requireAuth();
 
   const { id } = await params;
 
