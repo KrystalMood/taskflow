@@ -1,6 +1,6 @@
 "use client";
 
-import { ActionResult, createTask } from "@/actions/task";
+import { useCreateTask } from "@/hooks";
 import {
   Card,
   CardHeader,
@@ -9,35 +9,42 @@ import {
   Input,
   Textarea,
   Select,
-  SubmitButton,
+  Button,
 } from "@/components/ui";
-import { useActionState } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface CreateTaskFormProps {
   projects: { id: string; name: string; color: string | null }[];
 }
 
 export function CreateTaskForm({ projects }: CreateTaskFormProps) {
-  const [state, formAction] = useActionState<ActionResult | null, FormData>(
-    createTask,
-    null
-  );
+  const router = useRouter();
+  const createTask = useCreateTask();
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(formData: FormData) {
+    setError(null);
+    createTask.mutate(formData, {
+      onSuccess: () => {
+        router.push("/dashboard/tasks");
+      },
+      onError: (error) => {
+        setError(error.message);
+      },
+    });
+  }
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Create New Task</CardTitle>
       </CardHeader>
       <CardContent>
-        <form action={formAction} className="space-y-4">
-          {state?.success === false && !state.fieldErrors && (
+        <form action={handleSubmit} className="space-y-4">
+          {error && (
             <div className="bg-danger-50 text-danger-600 rounded-md p-3 text-sm">
-              {state.message}
-            </div>
-          )}
-
-          {state?.success === true && (
-            <div className="bg-success-50 text-success-600 rounded-md p-3 text-sm">
-              {state.message}
+              {error}
             </div>
           )}
 
@@ -45,11 +52,7 @@ export function CreateTaskForm({ projects }: CreateTaskFormProps) {
             name="title"
             label="Task Title"
             placeholder="What needs to be done?"
-            error={
-              state?.success === false
-                ? state.fieldErrors?.title?.[0]
-                : undefined
-            }
+            required
           />
 
           <Textarea
@@ -57,11 +60,6 @@ export function CreateTaskForm({ projects }: CreateTaskFormProps) {
             label="Description"
             placeholder="Add more details..."
             rows={2}
-            error={
-              state?.success === false
-                ? state.fieldErrors?.description?.[0]
-                : undefined
-            }
           />
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -72,11 +70,6 @@ export function CreateTaskForm({ projects }: CreateTaskFormProps) {
                 value: p.id,
                 label: p.name,
               }))}
-              error={
-                state?.success === false
-                  ? state.fieldErrors?.projectId?.[0]
-                  : undefined
-              }
             />
 
             <Select
@@ -84,28 +77,19 @@ export function CreateTaskForm({ projects }: CreateTaskFormProps) {
               label="Priority"
               defaultValue="MEDIUM"
               options={[
-                { value: "LOW", label: "low" },
-                { value: "MEDIUM", label: "medium" },
-                { value: "HIGH", label: "high" },
-                { value: "URGENT", label: "urgent" },
+                { value: "LOW", label: "Low" },
+                { value: "MEDIUM", label: "Medium" },
+                { value: "HIGH", label: "High" },
+                { value: "URGENT", label: "Urgent" },
               ]}
             />
           </div>
 
-          <Input
-            name="dueDate"
-            label="Due Date"
-            type="date"
-            error={
-              state?.success === false
-                ? state.fieldErrors?.dueDate?.[0]
-                : undefined
-            }
-          />
+          <Input name="dueDate" label="Due Date" type="date" />
 
-          <SubmitButton className="w-full" pendingText="Creating...">
-            Create Task
-          </SubmitButton>
+          <Button className="w-full" disabled={createTask.isPending}>
+            {createTask.isPending ? "Creating..." : "Create Task"}
+          </Button>
         </form>
       </CardContent>
     </Card>

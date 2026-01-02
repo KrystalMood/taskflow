@@ -1,40 +1,46 @@
-import { NextRequest, NextResponse } from "next/server";
-import { Task } from "@/types";
+import { prisma, requireAuth } from "@/lib";
+import { TaskStatus } from "@/types";
+import { NextResponse } from "next/server";
 
-const mockTasks: Task[] = [
-  {
-    id: "1",
-    title: "Learn TypeScript",
-    description: "Complete Module 03",
-    status: "completed",
-    priority: "high",
-    projectId: "project-1",
-  },
-  {
-    id: "2",
-    title: "Master Tailwind CSS",
-    description: "Complete Module 04",
-    status: "in-progress",
-    priority: "high",
-    projectId: "project-1",
-  },
-];
+export async function GET(request: Request) {
+  try {
+    const session = await requireAuth();
 
-// GET /api/tasks
-export async function GET() {
-  return NextResponse.json({ data: mockTasks });
-}
+    const { searchParams } = new URL(request.url);
+    const status = searchParams.get("status");
+    const search = searchParams.get("search");
 
-// POST /api/tasks
-export async function POST(request: NextRequest) {
-  const body = await request.json();
+    const tasks = await prisma.task.findMany({
+      where: {
+        userId: session.user.id,
+        ...(status && status !== "ALL" ? { status: status as TaskStatus } : {}),
+        ...(search
+          ? {
+              OR: [
+                { title: { contains: search, mode: "insensitive" } },
+                { description: { contains: search, mode: "insensitive" } },
+              ],
+            }
+          : {}),
+      },
+      include: {
+        project: {
+          select: {
+            name: true,
+            color: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
 
-  const newTask: Task = {
-    id: Date.now().toString(),
-    ...body,
-  };
-
-  mockTasks.push(newTask);
-
-  return NextResponse.json({ data: newTask }, { status: 201 });
+    return NextResponse.json(tasks);
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Failed to fetch tasks: " + error },
+      { status: 500 }
+    );
+  }
 }

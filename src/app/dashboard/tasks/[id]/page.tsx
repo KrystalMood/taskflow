@@ -1,9 +1,7 @@
 import { prisma, requireAuth } from "@/lib";
 import { notFound, redirect } from "next/navigation";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { Button, Badge } from "@/components/ui";
 import { PageHeader } from "@/components/layout";
+import { Breadcrumb, Badge } from "@/components/ui";
 import { EditTaskForm } from "@/components/tasks";
 
 const statusConfig = {
@@ -46,14 +44,12 @@ export default async function TaskDetailPage({
 
   return (
     <div className="space-y-8">
-      <div>
-        <Link href="/dashboard/tasks">
-          <Button variant="ghost" className="gap-2">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Tasks
-          </Button>
-        </Link>
-      </div>
+      <Breadcrumb
+        items={[
+          { label: "Tasks", href: "/dashboard/tasks" },
+          { label: task.title, active: true },
+        ]}
+      />
 
       <PageHeader
         title={task.title}

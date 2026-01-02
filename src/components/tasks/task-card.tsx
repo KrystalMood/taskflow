@@ -10,7 +10,7 @@ import {
 } from "@/components/ui";
 import { useTransition } from "react";
 import { Calendar, ExternalLink, Trash2 } from "lucide-react";
-import { deleteTask } from "@/actions/task";
+import { useDeleteTask } from "@/hooks";
 import Link from "next/link";
 
 interface TaskCardProps {
@@ -20,11 +20,11 @@ interface TaskCardProps {
     description: string | null;
     status: string;
     priority: string;
-    dueDate: Date | null;
+    dueDate: Date | string | null;
     project: {
       name: string;
       color: string | null;
-    };
+    } | null;
   };
 }
 
@@ -44,6 +44,7 @@ const priorityConfig = {
 
 export function TaskCard({ task }: TaskCardProps) {
   const [isPending, startTransition] = useTransition();
+  const deleteTask = useDeleteTask();
 
   const status =
     statusConfig[task.status as keyof typeof statusConfig] || statusConfig.TODO;
@@ -52,15 +53,13 @@ export function TaskCard({ task }: TaskCardProps) {
     priorityConfig[task.priority as keyof typeof priorityConfig] ||
     priorityConfig.MEDIUM;
 
-  const handleDelete = () => {
-    if (!confirm("Are you sure you want to delete this task?")) return;
+  const handleDelete = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-    startTransition(async () => {
-      const result = await deleteTask(task.id);
-      if (!result.success) {
-        alert(result.message);
-      }
-    });
+    if (confirm("Delete task?")) {
+      deleteTask.mutate(task.id);
+    }
   };
 
   const formatDate = (date: Date) => {
@@ -77,9 +76,9 @@ export function TaskCard({ task }: TaskCardProps) {
           <div className="flex items-center gap-2">
             <span
               className="h-2 w-2 shrink-0 rounded-full"
-              style={{ backgroundColor: task.project.color || "#6366f1" }}
+              style={{ backgroundColor: task.project?.color || "#6366f1" }}
             />
-            <span className="text-brand-500 text-xs">{task.project.name}</span>
+            <span className="text-brand-500 text-xs">{task.project?.name}</span>
           </div>
           <CardTitle className="text-base">{task.title}</CardTitle>
         </div>
