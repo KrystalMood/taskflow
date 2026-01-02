@@ -1,6 +1,6 @@
 import { prisma, requireAuth } from "@/lib";
 import { Metadata } from "next";
-import { Button } from "@/components/ui";
+import { Breadcrumb, Button } from "@/components/ui";
 import { ProjectCard, CreateProjectForm } from "@/components/projects";
 import { PageHeader } from "@/components/layout";
 
@@ -27,6 +27,7 @@ export default async function ProjectsPage() {
   return (
     <div className="space-y-8">
       <CreateProjectForm />
+      <Breadcrumb items={[{ label: "Projects", active: true }]} />
       <PageHeader title="Projects" description="Your TaskFlow projects">
         <Button>New Project</Button>
       </PageHeader>

@@ -6,6 +6,7 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
+  Breadcrumb,
 } from "@/components/ui";
 import { AvatarUpload } from "@/components/settings";
 
@@ -19,12 +20,13 @@ export default async function SettingsPage() {
 
   return (
     <div className="space-y-6">
+      <Breadcrumb items={[{ label: "Settings", active: true }]} />
       <PageHeader
         title="Settings"
         description="Manage your account settings and preferences."
       />
 
-      <Card>
+      <Card className="max-w-2xl">
         <CardHeader>
           <CardTitle>Profile Picture</CardTitle>
           <CardDescription>

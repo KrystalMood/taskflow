@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  Breadcrumb,
+} from "@/components/ui";
 import { getDashboardStats } from "@/lib/stats";
 import { PageHeader } from "@/components/layout";
 import { requireAuth } from "@/lib";
@@ -14,13 +20,13 @@ export default async function DashboardPage() {
 
   const stats = await getDashboardStats(session.user.id);
   return (
-    <div>
+    <div className="space-y-6">
+      <Breadcrumb items={[{ label: "Overview", active: true }]} />
       <PageHeader
         title="Dashboard Overview"
         description="Welcome back! Here's what's happening."
       />
 
-      {/* Stats Grid */}
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader>

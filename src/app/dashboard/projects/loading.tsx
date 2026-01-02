@@ -1,34 +1,25 @@
-export default function ProjectsLoading() {
+import { PageHeader } from "@/components/layout";
+import { Button } from "@/components/ui";
+
+export default function Loading() {
   return (
-    <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div className="bg-brand-200 h-8 w-32 animate-pulse rounded" />
-        <div className="bg-brand-200 h-10 w-28 animate-pulse rounded-md" />
+    <div className="space-y-6">
+      <div className="h-4 w-20 animate-pulse rounded bg-gray-200" />
+
+      <div className="flex items-center justify-between">
+        <PageHeader
+          title="Projects"
+          description="Manage and track your projects."
+        />
+        <Button disabled>New Project</Button>
       </div>
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {[1, 2, 3, 4, 5, 6].map((i) => (
+        {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="animate-pulse rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
-          >
-            <div className="mb-4 flex items-center gap-2">
-              <div className="bg-brand-200 h-3 w-3 shrink-0 rounded-full" />
-              <div className="bg-brand-200 h-5 w-40 rounded" />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="bg-brand-200 h-4 w-8 rounded" />
-                <div className="bg-brand-200 h-4 w-12 rounded" />
-              </div>
-              <div className="bg-brand-200 h-5 w-16 rounded-full" />
-            </div>
-
-            <div className="mt-4 flex items-center justify-end gap-1">
-              <div className="bg-brand-200 h-3 w-24 rounded" />
-              <div className="bg-brand-200 h-4 w-4 rounded" />
-            </div>
-          </div>
+            className="h-48 animate-pulse rounded-xl border border-gray-200 bg-gray-100"
+          />
         ))}
       </div>
     </div>

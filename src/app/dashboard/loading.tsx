@@ -1,23 +1,58 @@
-export default function DashboardLoading() {
-  return (
-    <div className="animate-pulse">
-      <div className="bg-brand-200 mb-6 h-8 w-1/4 rounded" />
+import { PageHeader } from "@/components/layout";
+import { Card, CardHeader, CardContent } from "@/components/ui";
 
-      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+export default function Loading() {
+  return (
+    <div className="space-y-6">
+      <div className="h-4 w-20 animate-pulse rounded bg-gray-200" />
+
+      <PageHeader
+        title="Dashboard Overview"
+        description="Welcome back! Here's what's happening."
+      />
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {[1, 2, 3, 4].map((i) => (
-          <div
-            key={i}
-            className="border-brand-200 rounded-lg border bg-white p-6"
-          >
-            <div className="bg-brand-200 mb-4 h-4 w-1/2 rounded" />
-            <div className="bg-brand-200 h-8 w-1/3 rounded" />
-          </div>
+          <Card key={i}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <div className="h-4 w-24 animate-pulse rounded bg-gray-200" />
+            </CardHeader>
+            <CardContent>
+              <div className="h-8 w-16 animate-pulse rounded bg-gray-200" />
+              <div className="mt-2 h-3 w-32 animate-pulse rounded bg-gray-200" />
+            </CardContent>
+          </Card>
         ))}
       </div>
 
-      <div className="border-brand-200 rounded-lg border bg-white p-6">
-        <div className="bg-brand-200 mb-4 h-4 w-1/4 rounded" />
-        <div className="bg-brand-200 h-4 w-3/4 rounded" />
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <Card className="col-span-4">
+          <CardHeader>
+            <div className="h-6 w-32 animate-pulse rounded bg-gray-200" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="flex items-center gap-4">
+                  <div className="h-10 w-10 animate-pulse rounded-full bg-gray-200" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 w-full animate-pulse rounded bg-gray-200" />
+                    <div className="h-3 w-2/3 animate-pulse rounded bg-gray-200" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="col-span-3">
+          <CardHeader>
+            <div className="h-6 w-32 animate-pulse rounded bg-gray-200" />
+          </CardHeader>
+          <CardContent>
+            <div className="h-40 w-full animate-pulse rounded bg-gray-200" />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
