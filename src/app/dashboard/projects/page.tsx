@@ -1,8 +1,8 @@
-import { prisma, requireAuth } from "@/lib";
+import { requireAuth } from "@/lib";
 import { Metadata } from "next";
-import { Breadcrumb, Button } from "@/components/ui";
-import { ProjectCard, CreateProjectForm } from "@/components/projects";
+import { Breadcrumb } from "@/components/ui";
 import { PageHeader } from "@/components/layout";
+import { ProjectListClient } from "@/components/projects/project-list-client";
 
 export const metadata: Metadata = {
   title: "Projects - TaskFlow",
@@ -10,39 +10,16 @@ export const metadata: Metadata = {
 };
 
 export default async function ProjectsPage() {
-  const session = await requireAuth();
-
-  const projects = await prisma.project.findMany({
-    where: { userId: session.user.id },
-    include: {
-      _count: {
-        select: { tasks: true },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  await requireAuth();
 
   return (
-    <div className="space-y-8">
-      <CreateProjectForm />
+    <div className="space-y-6">
       <Breadcrumb items={[{ label: "Projects", active: true }]} />
-      <PageHeader title="Projects" description="Your TaskFlow projects">
-        <Button>New Project</Button>
-      </PageHeader>
-
-      {projects.length === 0 ? (
-        <div className="text-brand-500 py-16 text-center">
-          <p>No projects yet. Create your first project!</p>
-        </div>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </div>
-      )}
+      <PageHeader
+        title="Projects"
+        description="Manage and track your projects"
+      />
+      <ProjectListClient />
     </div>
   );
 }

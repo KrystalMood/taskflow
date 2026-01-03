@@ -6,12 +6,14 @@ export default function Loading() {
     <div className="space-y-6">
       <div className="h-4 w-20 animate-pulse rounded bg-gray-200" />
 
-      <div className="flex items-center justify-between">
-        <PageHeader
-          title="Projects"
-          description="Manage and track your projects."
-        />
-        <Button disabled>New Project</Button>
+      <PageHeader
+        title="Projects"
+        description="Manage and track your projects."
+      />
+
+      <div className="flex items-center gap-4">
+        <div className="h-10 flex-1 animate-pulse rounded-md bg-gray-200" />
+        <div className="h-10 w-32 animate-pulse rounded-md bg-gray-200" />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

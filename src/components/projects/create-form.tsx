@@ -1,7 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
-import { createProject, ActionResult } from "@/actions/project";
+import { useCreateProject } from "@/hooks";
 import {
   Card,
   CardHeader,
@@ -9,15 +8,28 @@ import {
   CardContent,
   Input,
   Textarea,
-  SubmitButton,
+  Button,
 } from "@/components/ui";
 import { ColorPicker } from "@/components/ui/color-picker";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export function CreateProjectForm() {
-  const [state, formAction] = useActionState<ActionResult | null, FormData>(
-    createProject,
-    null
-  );
+  const router = useRouter();
+  const createProject = useCreateProject();
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(formData: FormData) {
+    setError(null);
+    createProject.mutate(formData, {
+      onSuccess: () => {
+        router.push("/dashboard/projects");
+      },
+      onError: (err) => {
+        setError(err.message);
+      },
+    });
+  }
 
   return (
     <Card>
@@ -25,29 +37,18 @@ export function CreateProjectForm() {
         <CardTitle>Create New Project</CardTitle>
       </CardHeader>
       <CardContent>
-        <form action={formAction} className="space-y-4">
-          {state?.success === false && !state.fieldErrors && (
+        <form action={handleSubmit} className="space-y-4">
+          {error && (
             <div className="bg-danger-50 text-danger-600 rounded-md p-3 text-sm">
-              {state.message}
-            </div>
-          )}
-
-          {state?.success === true && (
-            <div className="bg-success-50 text-success-600 rounded-md p-3 text-sm">
-              {state.message}
+              {error}
             </div>
           )}
 
           <Input
             name="name"
-            label="Project Name *"
+            label="Project Name"
             placeholder="My Awesome Project"
             required
-            error={
-              state?.success === false
-                ? state.fieldErrors?.name?.[0]
-                : undefined
-            }
           />
 
           <Textarea
@@ -55,18 +56,13 @@ export function CreateProjectForm() {
             label="Description"
             placeholder="What is this project about?"
             rows={3}
-            error={
-              state?.success === false
-                ? state.fieldErrors?.description?.[0]
-                : undefined
-            }
           />
 
           <ColorPicker name="color" label="Color" defaultValue="#6366f1" />
 
-          <SubmitButton className="w-full" pendingText="Creating...">
-            Create Project
-          </SubmitButton>
+          <Button className="w-full" disabled={createProject.isPending}>
+            {createProject.isPending ? "Creating..." : "Create Project"}
+          </Button>
         </form>
       </CardContent>
     </Card>
