@@ -1,4 +1,5 @@
 import { prisma, requireAuth } from "@/lib";
+import { ProjectStatus } from "@/generated/prisma/client";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -6,13 +7,13 @@ export async function GET(request: Request) {
     const session = await requireAuth();
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("search") || undefined;
+    const statusParam = searchParams.get("status");
+    const status = statusParam as ProjectStatus | undefined;
 
     const projects = await prisma.project.findMany({
       where: {
         AND: [
-          {
-            OR: [{ userId: session.user.id }],
-          },
+          { userId: session.user.id },
           search
             ? {
                 OR: [
@@ -21,6 +22,7 @@ export async function GET(request: Request) {
                 ],
               }
             : {},
+          status ? { status } : {},
         ],
       },
       include: {
