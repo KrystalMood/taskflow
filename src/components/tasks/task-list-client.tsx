@@ -3,8 +3,9 @@
 import { TaskCard } from "@/components/tasks/task-card";
 import { Input, Select } from "@/components/ui";
 import { Search } from "lucide-react";
-import { useDebounce, useTask } from "@/hooks";
+import { useDebounce, useRealtimeTasks, useTask } from "@/hooks";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 const STATUS_OPTIONS = [
   { value: "ALL", label: "All Status" },
@@ -17,8 +18,14 @@ const STATUS_OPTIONS = [
 export function TaskListClient() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("ALL");
+  const { data: session } = useSession();
 
   const debouncedSearch = useDebounce(search, 500);
+
+  useRealtimeTasks({
+    userId: session?.user.id,
+    enabled: !!session?.user?.id,
+  });
 
   const {
     data: tasks,
@@ -31,6 +38,13 @@ export function TaskListClient() {
 
   return (
     <div className="space-y-4">
+      <div className="text-brand-500 flex items-center gap-2 text-sm">
+        <span className="relative flex h-2 w-2">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
+        </span>
+        Live updates enabled
+      </div>
       <div className="flex flex-col gap-4 sm:flex-row">
         <div className="relative flex-1">
           <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
