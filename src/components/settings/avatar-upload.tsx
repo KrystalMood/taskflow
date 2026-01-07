@@ -5,6 +5,7 @@ import Image from "next/image";
 import { FILE_CONFIG } from "@/lib/validations/file";
 import { removeAvatar, uploadAvatar } from "@/actions/upload";
 import { Button, Input } from "@/components/ui";
+import { useToast } from "@/components/providers";
 
 interface AvatarUploadProps {
   currentAvatar: string | null;
@@ -16,6 +17,7 @@ export function AvatarUpload({ currentAvatar, userName }: AvatarUploadProps) {
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const inputRef = useRef<HTMLInputElement>(null);
+  const toast = useToast();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -52,8 +54,10 @@ export function AvatarUpload({ currentAvatar, userName }: AvatarUploadProps) {
       const result = await uploadAvatar(formData);
 
       if (result.message) {
+        toast.error("Upload failed", result.message);
         setError(result.message);
       } else {
+        toast.success("Avatar updated!", "Your avatar has been updated");
         setPreview(null);
         if (inputRef.current) inputRef.current.value = "";
       }
@@ -64,7 +68,10 @@ export function AvatarUpload({ currentAvatar, userName }: AvatarUploadProps) {
     startTransition(async () => {
       const result = await removeAvatar();
       if (result.message) {
+        toast.error("Remove failed", result.message);
         setError(result.message);
+      } else {
+        toast.success("Avatar removed!", "Your avatar has been removed");
       }
     });
   };

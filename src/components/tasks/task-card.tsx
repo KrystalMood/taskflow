@@ -8,10 +8,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui";
-import { useTransition } from "react";
 import { Calendar, ExternalLink, Trash2 } from "lucide-react";
 import { useDeleteTask } from "@/hooks";
 import Link from "next/link";
+import { useToast } from "@/components/providers";
 
 interface TaskCardProps {
   task: {
@@ -43,7 +43,7 @@ const priorityConfig = {
 };
 
 export function TaskCard({ task }: TaskCardProps) {
-  const [isPending, startTransition] = useTransition();
+  const toast = useToast();
   const deleteTask = useDeleteTask();
 
   const status =
@@ -58,7 +58,11 @@ export function TaskCard({ task }: TaskCardProps) {
     e.stopPropagation();
 
     if (confirm("Delete task?")) {
-      deleteTask.mutate(task.id);
+      deleteTask.mutate(task.id, {
+        onSuccess: () => {
+          toast.success("Task deleted!", "Your task has been deleted");
+        },
+      });
     }
   };
 
@@ -91,7 +95,7 @@ export function TaskCard({ task }: TaskCardProps) {
           <Button
             variant="ghost"
             onClick={handleDelete}
-            disabled={isPending}
+            disabled={deleteTask.isPending}
             title="Delete Task"
             className="h-8 w-8 p-0 hover:bg-red-50"
           >

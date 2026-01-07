@@ -8,9 +8,10 @@ import {
   CardContent,
   Button,
 } from "@/components/ui";
-import { startTransition, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { ChevronDown, ChevronUp, ExternalLink, Trash2 } from "lucide-react";
 import { deleteProject } from "@/actions/project";
+import { useToast } from "@/components/providers";
 
 interface ProjectCardProps {
   project: {
@@ -28,6 +29,7 @@ interface ProjectCardProps {
 export function ProjectCard({ project }: ProjectCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const toast = useToast();
 
   const statusConfig = {
     ACTIVE: { label: "Active", className: "bg-success-50 text-success-600" },
@@ -47,8 +49,10 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
     startTransition(async () => {
       const result = await deleteProject(project.id);
-      if (!result.success) {
-        alert(result.message);
+      if (result.success) {
+        toast.success("Project deleted!", "Your project has been deleted");
+      } else {
+        toast.error("Failed to delete", result.message);
       }
     });
   };

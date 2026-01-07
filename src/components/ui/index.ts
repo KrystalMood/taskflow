@@ -16,3 +16,5 @@ export { ColorPicker } from "./color-picker";
 export { Select } from "./select";
 export { Badge } from "./badge";
 export { Breadcrumb } from "./breadcrumb";
+export { ToastContainer } from "./toast-container";
+export { Toast } from "./toast";

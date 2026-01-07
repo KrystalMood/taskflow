@@ -13,9 +13,11 @@ import {
 import { ColorPicker } from "@/components/ui/color-picker";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/providers";
 
 export function CreateProjectForm() {
   const router = useRouter();
+  const toast = useToast();
   const createProject = useCreateProject();
   const [error, setError] = useState<string | null>(null);
 
@@ -23,9 +25,11 @@ export function CreateProjectForm() {
     setError(null);
     createProject.mutate(formData, {
       onSuccess: () => {
+        toast.success("Project created!", "Your new project has been added");
         router.push("/dashboard/projects");
       },
       onError: (err) => {
+        toast.error("Failed to create project", err.message);
         setError(err.message);
       },
     });

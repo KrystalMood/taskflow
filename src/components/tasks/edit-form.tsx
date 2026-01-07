@@ -12,6 +12,7 @@ import { useUpdateTask, useDeleteTask } from "@/hooks";
 import { Task } from "@/generated/prisma/client";
 import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
+import { useToast } from "@/components/providers";
 
 interface EditTaskFormProps {
   task: Task & {
@@ -21,6 +22,7 @@ interface EditTaskFormProps {
 
 export function EditTaskForm({ task }: EditTaskFormProps) {
   const router = useRouter();
+  const toast = useToast();
   const updateTask = useUpdateTask(task.id);
   const deleteTask = useDeleteTask();
   const [error, setError] = useState<string | null>(null);
@@ -33,10 +35,12 @@ export function EditTaskForm({ task }: EditTaskFormProps) {
     setError(null);
     updateTask.mutate(formData, {
       onSuccess: () => {
+        toast.success("Task updated!", "Your task has been updated");
         router.push("/dashboard/tasks");
         router.refresh();
       },
       onError: (error) => {
+        toast.error("Failed to update task", error.message);
         setError(error.message);
       },
     });
@@ -53,7 +57,10 @@ export function EditTaskForm({ task }: EditTaskFormProps) {
           onClick={() => {
             if (confirm("Delete this task?")) {
               deleteTask.mutate(task.id, {
-                onSuccess: () => router.push("/dashboard/tasks"),
+                onSuccess: () => {
+                  toast.success("Task deleted!", "Your task has been deleted");
+                  router.push("/dashboard/tasks");
+                },
               });
             }
           }}

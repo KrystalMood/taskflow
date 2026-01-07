@@ -13,6 +13,7 @@ import {
 } from "@/components/ui";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/providers";
 
 interface CreateTaskFormProps {
   projects: { id: string; name: string; color: string | null }[];
@@ -20,6 +21,7 @@ interface CreateTaskFormProps {
 
 export function CreateTaskForm({ projects }: CreateTaskFormProps) {
   const router = useRouter();
+  const toast = useToast();
   const createTask = useCreateTask();
   const [error, setError] = useState<string | null>(null);
 
@@ -27,9 +29,11 @@ export function CreateTaskForm({ projects }: CreateTaskFormProps) {
     setError(null);
     createTask.mutate(formData, {
       onSuccess: () => {
+        toast.success("Task created!", "Your new task has been added");
         router.push("/dashboard/tasks");
       },
       onError: (error) => {
+        toast.error("Failed to create task", error.message);
         setError(error.message);
       },
     });

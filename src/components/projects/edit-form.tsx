@@ -15,6 +15,7 @@ import { useDeleteProject, useUpdateProject } from "@/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Trash2 } from "lucide-react";
+import { useToast } from "@/components/providers";
 
 interface EditProjectFormProps {
   project: Project;
@@ -22,6 +23,7 @@ interface EditProjectFormProps {
 
 export function EditProjectForm({ project }: EditProjectFormProps) {
   const router = useRouter();
+  const toast = useToast();
   const updateProject = useUpdateProject(project.id);
   const deleteProject = useDeleteProject();
 
@@ -31,10 +33,14 @@ export function EditProjectForm({ project }: EditProjectFormProps) {
     setError(null);
     updateProject.mutate(formData, {
       onSuccess: () => {
+        toast.success("Project updated!");
         router.push("/dashboard/projects");
         router.refresh();
       },
-      onError: (err) => setError(err.message),
+      onError: (err) => {
+        toast.error("Failed to update project", err.message);
+        setError(err.message);
+      },
     });
   }
 
@@ -46,6 +52,7 @@ export function EditProjectForm({ project }: EditProjectFormProps) {
     ) {
       deleteProject.mutate(project.id, {
         onSuccess: () => {
+          toast.success("Project deleted!", "Your project has been deleted");
           router.push("/dashboard/projects");
           router.refresh();
         },
