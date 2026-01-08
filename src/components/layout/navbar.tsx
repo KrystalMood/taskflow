@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { NavLink } from "@/components/ui";
 import { UserNav } from "@/components/auth";
+import { GlobalSearch } from "./global-search";
 
 export function Navbar() {
   return (
@@ -37,7 +38,10 @@ export function Navbar() {
         </nav>
 
         {/* Actions */}
-        <UserNav />
+        <div className="flex items-center gap-4">
+          <GlobalSearch />
+          <UserNav />
+        </div>
       </div>
     </header>
   );

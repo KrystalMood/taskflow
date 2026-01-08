@@ -10,8 +10,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 export const projectKeys = {
   all: ["projects"] as const,
   lists: () => [...projectKeys.all, "list"] as const,
-  list: (filters: { search?: string; status?: string }) =>
-    [...projectKeys.lists(), filters] as const,
+  list: (filters: {
+    search?: string;
+    status?: string;
+    sortBy?: string;
+    sortOrder?: string;
+  }) => [...projectKeys.lists(), filters] as const,
   details: () => [...projectKeys.all, "detail"] as const,
   detail: (id: string) => [...projectKeys.details(), id] as const,
 };
@@ -20,13 +24,20 @@ type ProjectWithCount = Project & {
   _count: { tasks: number };
 };
 
-export function useProjects(search?: string, status?: string) {
+export function useProjects(
+  search?: string,
+  status?: string,
+  sortBy?: string,
+  sortOrder?: string
+) {
   return useQuery({
-    queryKey: projectKeys.list({ search, status }),
+    queryKey: projectKeys.list({ search, status, sortBy, sortOrder }),
     queryFn: async () => {
       const params = new URLSearchParams();
       if (search) params.append("search", search);
       if (status) params.append("status", status);
+      if (sortBy) params.append("sortBy", sortBy);
+      if (sortOrder) params.append("sortOrder", sortOrder);
 
       const res = await fetch(`/api/projects?${params.toString()}`);
       const data: ApiResponse<ProjectWithCount[]> = await res.json();

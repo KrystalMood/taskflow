@@ -6,11 +6,7 @@ import {
   updateTask as updateTaskAction,
   deleteTask as deleteTaskAction,
 } from "@/actions/task";
-
-interface TaskFilter {
-  status?: string;
-  search?: string;
-}
+import { TaskFilter } from "@/types";
 
 interface Task {
   id: string;
@@ -35,6 +31,8 @@ async function fetchTasks(filter: TaskFilter = {}): Promise<Task[]> {
   const params = new URLSearchParams();
   if (filter.status) params.set("status", filter.status);
   if (filter.search) params.set("search", filter.search);
+  if (filter.sortBy) params.set("sortBy", filter.sortBy);
+  if (filter.sortOrder) params.set("sortOrder", filter.sortOrder);
 
   const res = await fetch(`/api/tasks?${params.toString()}`);
   if (!res.ok) {

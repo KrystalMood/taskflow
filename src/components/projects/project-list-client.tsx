@@ -6,6 +6,7 @@ import { Search } from "lucide-react";
 import { Input, Select } from "@/components/ui";
 import { ProjectCard } from "@/components/projects/project-card";
 import { useSession } from "next-auth/react";
+import { SortField, SortOrder } from "@/types";
 
 const STATUS_OPTIONS = [
   { value: "ALL", label: "All Status" },
@@ -15,9 +16,22 @@ const STATUS_OPTIONS = [
   { value: "CANCELLED", label: "Cancelled" },
 ];
 
+const SORT_OPTIONS = [
+  { value: "createdAt", label: "Date Created" },
+  { value: "updatedAt", label: "Last Updated" },
+  { value: "name", label: "Name" },
+];
+
+const ORDER_OPTIONS = [
+  { value: "desc", label: "Newest First" },
+  { value: "asc", label: "Oldest First" },
+];
+
 export function ProjectListClient() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("ALL");
+  const [sortBy, setSortBy] = useState<SortField>("createdAt");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const { data: session } = useSession();
 
   const debouncedSearch = useDebounce(search, 500);
@@ -31,7 +45,12 @@ export function ProjectListClient() {
     data: projects,
     isLoading,
     isError,
-  } = useProjects(debouncedSearch, status !== "ALL" ? status : undefined);
+  } = useProjects(
+    debouncedSearch,
+    status !== "ALL" ? status : undefined,
+    sortBy,
+    sortOrder
+  );
 
   return (
     <div className="space-y-4">
@@ -42,22 +61,39 @@ export function ProjectListClient() {
         </span>
         Live updates enabled
       </div>
-      <div className="flex flex-col gap-4 sm:flex-row">
-        <div className="relative flex-1">
-          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          <Input
-            type="search"
-            placeholder="Search projects..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-        <div className="w-full sm:w-48">
+      {/* Search Bar */}
+      <div className="relative">
+        <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        <Input
+          type="search"
+          placeholder="Search projects..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="pl-9"
+        />
+      </div>
+
+      {/* Filters */}
+      <div className="flex flex-wrap gap-3">
+        <div className="w-full sm:w-auto sm:min-w-[160px]">
           <Select
             options={STATUS_OPTIONS}
             value={status}
             onChange={(e) => setStatus(e.target.value)}
+          />
+        </div>
+        <div className="w-full sm:w-auto sm:min-w-[160px]">
+          <Select
+            options={SORT_OPTIONS}
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as SortField)}
+          />
+        </div>
+        <div className="w-full sm:w-auto sm:min-w-[140px]">
+          <Select
+            options={ORDER_OPTIONS}
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value as SortOrder)}
           />
         </div>
       </div>

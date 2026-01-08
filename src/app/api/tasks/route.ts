@@ -5,11 +5,13 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   try {
     const session = await requireAuth();
-
     const { searchParams } = new URL(request.url);
+
     const status = searchParams.get("status");
     const search = searchParams.get("search");
-
+    const sortBy = searchParams.get("sortBy") || "createdAt";
+    const sortOrder = searchParams.get("sortOrder") || "desc";
+    
     const tasks = await prisma.task.findMany({
       where: {
         userId: session.user.id,
@@ -32,7 +34,7 @@ export async function GET(request: Request) {
         },
       },
       orderBy: {
-        createdAt: "desc",
+        [sortBy]: sortOrder,
       },
     });
 

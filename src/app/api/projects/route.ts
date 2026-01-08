@@ -6,8 +6,11 @@ export async function GET(request: Request) {
   try {
     const session = await requireAuth();
     const { searchParams } = new URL(request.url);
+
     const search = searchParams.get("search") || undefined;
     const statusParam = searchParams.get("status");
+    const sortBy = searchParams.get("sortBy") || "createdAt";
+    const sortOrder = searchParams.get("sortOrder") || "desc";
     const status = statusParam as ProjectStatus | undefined;
 
     const projects = await prisma.project.findMany({
@@ -30,7 +33,7 @@ export async function GET(request: Request) {
           select: { tasks: true },
         },
       },
-      orderBy: { updatedAt: "desc" },
+      orderBy: { [sortBy]: sortOrder },
     });
 
     return NextResponse.json({ success: true, data: projects });
