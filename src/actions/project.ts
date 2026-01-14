@@ -7,14 +7,14 @@ import {
   updateProjectSchema,
 } from "@/lib/validations/project";
 
-export type ActionResult =
+export type ProjectActionResult =
   | { success: true; message?: string }
   | { success: false; message: string; fieldErrors?: Record<string, string[]> };
 
 export async function createProject(
-  prevState: ActionResult | null,
+  prevState: ProjectActionResult | null,
   formData: FormData
-): Promise<ActionResult> {
+): Promise<ProjectActionResult> {
   const authResult = await getAuthContext();
   if (!authResult.success) {
     return { success: false, message: authResult.message };
@@ -58,9 +58,9 @@ export async function createProject(
 
 export async function updateProject(
   id: string,
-  prevState: ActionResult | null,
+  prevState: ProjectActionResult | null,
   formData: FormData
-): Promise<ActionResult> {
+): Promise<ProjectActionResult> {
   const authResult = await getAuthContext();
   if (!authResult.success) {
     return { success: false, message: authResult.message };
@@ -111,7 +111,7 @@ export async function updateProject(
   }
 }
 
-export async function deleteProject(id: string): Promise<ActionResult> {
+export async function deleteProject(id: string): Promise<ProjectActionResult> {
   const authResult = await getAuthContext();
   if (!authResult.success) {
     return { success: false, message: authResult.message };

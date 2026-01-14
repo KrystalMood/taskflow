@@ -1,4 +1,4 @@
 export * from "./project";
 export * from "./task";
-export * from "./file";
+export * from "./upload";
 export * from "./comment";

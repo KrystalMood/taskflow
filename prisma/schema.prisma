@@ -55,6 +55,7 @@ model User {
   projects      Project[]
   sessions      Session[]
   tasks         Task[]
+  comments      Comment[]
 }
 
 model Project {
@@ -85,9 +86,31 @@ model Task {
   userId      String
   project     Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments    Comment[]
 
   @@index([projectId])
   @@index([userId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  parentId String?
+  parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  Comment[] @relation("CommentReplies")
+
+  @@index([taskId])
+  @@index([userId])
+  @@index([parentId])
 }
 
 enum UserRole {

@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { PageHeader } from "@/components/layout";
 import { Breadcrumb, Badge } from "@/components/ui";
 import { EditTaskForm } from "@/components/tasks";
+import { CommentList } from "@/components/comments";
 
 const statusConfig = {
   TODO: { label: "To Do", variant: "default" as const },
@@ -50,7 +51,6 @@ export default async function TaskDetailPage({
           { label: task.title, active: true },
         ]}
       />
-
       <PageHeader
         title={task.title}
         description={task.description || "No description"}
@@ -64,9 +64,13 @@ export default async function TaskDetailPage({
           <Badge variant={status.variant}>{status.label}</Badge>
         </div>
       </PageHeader>
-
-      <div className="max-w-2xl">
-        <EditTaskForm task={task} />
+      <div className="grid gap-8 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <EditTaskForm task={task} />
+        </div>
+        <div className="h-fit space-y-4">
+          <CommentList taskId={task.id} />
+        </div>
       </div>
     </div>
   );

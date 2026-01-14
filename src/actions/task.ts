@@ -4,14 +4,14 @@ import { checkOwnership, getAuthContext, prisma } from "@/lib";
 import { createTaskSchema, updateTaskSchema } from "@/lib/validations";
 import { revalidatePath } from "next/cache";
 
-export type ActionResult =
+export type TaskActionResult =
   | { success: true; message?: string }
   | { success: false; message: string; fieldErrors?: Record<string, string[]> };
 
 export async function createTask(
-  prevState: ActionResult | null,
+  prevState: TaskActionResult | null,
   formData: FormData
-): Promise<ActionResult> {
+): Promise<TaskActionResult> {
   const authResult = await getAuthContext();
   if (!authResult.success) {
     return { success: false, message: authResult.message };
@@ -75,9 +75,9 @@ export async function createTask(
 
 export async function updateTask(
   id: string,
-  prevState: ActionResult | null,
+  prevState: TaskActionResult | null,
   formData: FormData
-): Promise<ActionResult> {
+): Promise<TaskActionResult> {
   const authResult = await getAuthContext();
   if (!authResult.success) {
     return { success: false, message: authResult.message };
@@ -136,7 +136,7 @@ export async function updateTask(
   }
 }
 
-export async function deleteTask(id: string): Promise<ActionResult> {
+export async function deleteTask(id: string): Promise<TaskActionResult> {
   const authResult = await getAuthContext();
   if (!authResult.success) {
     return { success: false, message: authResult.message };
