@@ -17,7 +17,7 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
   return (
     <nav
       className={cn(
-        "flex items-center space-x-2 text-sm text-gray-500",
+        "text-brand-500 flex items-center space-x-2 text-sm",
         className
       )}
     >
@@ -41,7 +41,7 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
           ) : (
             <span
               className={cn(
-                "font-medium text-gray-900",
+                "text-brand-900 font-medium",
                 item.active && "text-brand-600"
               )}
             >

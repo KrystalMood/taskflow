@@ -56,14 +56,14 @@ export function TaskListClient() {
     <div className="space-y-4">
       <div className="text-brand-500 flex items-center gap-2 text-sm">
         <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
+          <span className="bg-success-400 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"></span>
+          <span className="bg-success-500 relative inline-flex h-2 w-2 rounded-full"></span>
         </span>
         Live updates enabled
       </div>
       {/* Search Bar */}
       <div className="relative">
-        <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        <Search className="text-brand-400 absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
         <Input
           type="search"
           placeholder="Search tasks..."

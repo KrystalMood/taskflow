@@ -153,7 +153,7 @@ export function AvatarUpload({ currentAvatar, userName }: AvatarUploadProps) {
         </div>
       </div>
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && <p className="text-danger-500 text-sm">{error}</p>}
     </div>
   );
 }

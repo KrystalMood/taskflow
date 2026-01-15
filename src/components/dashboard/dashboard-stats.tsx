@@ -33,8 +33,8 @@ export function DashboardStats() {
     <>
       <div className="text-brand-500 mb-4 flex items-center gap-2 text-sm">
         <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
+          <span className="bg-success-400 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"></span>
+          <span className="bg-success-500 relative inline-flex h-2 w-2 rounded-full"></span>
         </span>
         Live updates enabled
       </div>

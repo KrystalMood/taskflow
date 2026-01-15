@@ -9,6 +9,7 @@ import {
   CardTitle,
   CardContent,
   Button,
+  Input,
 } from "@/components/ui";
 
 export function LoginForm() {
@@ -54,35 +55,23 @@ export function LoginForm() {
           )}
 
           <div>
-            <label
-              htmlFor="email"
-              className="text-brand-700 mb-1 block text-sm font-medium"
-            >
-              Email
-            </label>
-            <input
+            <Input
+              label="Email"
               type="email"
               id="email"
               name="email"
               required
-              className="border-brand-300 focus:ring-accent-500 text-brand-900 w-full rounded-md border px-3 py-2 focus:ring-2 focus:outline-none"
               placeholder="demo@taskflow.com"
             />
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="text-brand-700 mb-1 block text-sm font-medium"
-            >
-              Password
-            </label>
-            <input
+            <Input
+              label="Password"
               type="password"
               id="password"
               name="password"
               required
-              className="border-brand-300 focus:ring-accent-500 text-brand-900 w-full rounded-md border px-3 py-2 focus:ring-2 focus:outline-none"
               placeholder="demo123"
             />
           </div>

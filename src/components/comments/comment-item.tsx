@@ -1,5 +1,7 @@
 "use client";
 
+import { cn } from "@/lib/utils";
+
 import { useState } from "react";
 import { Comment, useDeleteComment, useUpdateComment } from "@/hooks";
 import { useToast } from "@/components/providers";
@@ -89,9 +91,7 @@ export function CommentItem({ comment, taskId, depth = 0 }: CommentItemProps) {
   };
 
   return (
-    <div
-      className={`${depth > 0 ? "border-brand-100 ml-8 border-l-2 pl-4" : ""}`}
-    >
+    <div className={cn(depth > 0 && "border-brand-100 ml-8 border-l-2 pl-4")}>
       <div className="group flex gap-3 py-3">
         {/* Avatar */}
         <div className="bg-brand-100 border-brand-200 text-brand-700 flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border text-xs font-bold">

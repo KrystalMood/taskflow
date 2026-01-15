@@ -13,7 +13,7 @@ export function ToastContainer({ toasts, removeToast }: ToastContainerProps) {
 
   return (
     <div
-      className="pointer-events-none fixed top-4 right-4 z-9999 flex w-full max-w-sm flex-col gap-2"
+      className="pointer-events-none fixed top-4 right-4 z-[9999] flex w-full max-w-sm flex-col gap-2"
       aria-live="polite"
     >
       {toasts.map((toast) => (

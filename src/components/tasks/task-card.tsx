@@ -89,7 +89,7 @@ export function TaskCard({ task }: TaskCardProps) {
         <div>
           <Link href={`/dashboard/tasks/${task.id}`}>
             <Button variant="ghost" title="View Task" className="h-8 w-8 p-0">
-              <ExternalLink className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+              <ExternalLink className="text-brand-400 hover:text-brand-600 h-4 w-4" />
             </Button>
           </Link>
           <Button
@@ -97,9 +97,9 @@ export function TaskCard({ task }: TaskCardProps) {
             onClick={handleDelete}
             disabled={deleteTask.isPending}
             title="Delete Task"
-            className="h-8 w-8 p-0 hover:bg-red-50"
+            className="hover:bg-danger-50 h-8 w-8 p-0"
           >
-            <Trash2 className="h-4 w-4 text-gray-400 hover:text-red-500" />
+            <Trash2 className="text-brand-400 hover:text-danger-500 h-4 w-4" />
           </Button>
         </div>
       </CardHeader>
