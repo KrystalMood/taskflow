@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <main className="bg-brand-50 min-h-screen">
-      <div className="container mx-auto max-w-5xl px-4 py-8 lg:py-12">
+      <div className="container mx-auto px-4 py-8 lg:py-12">
         <PageHeader
           title="Behind TaskFlow"
           description="Built to demonstrate the power of Next.js 15, Server Components, and modern UI patterns."

@@ -37,7 +37,7 @@ export function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <Section id="faq" className="bg-white">
+    <Section id="faq" className="bg-brand-50">
       <SectionHeader
         title="Frequently Asked Questions"
         subtitle="Got questions? We've got answers"
